@@ -3,15 +3,29 @@ package org.yama.musicplayer.project
 import platform.AVFoundation.AVPlayer
 import platform.AVFoundation.AVPlayerItem
 import platform.Foundation.NSURL
+import platform.MediaPlayer.MPMediaLibrary
+import platform.MediaPlayer.MPMediaPropertyPersistentID
+import platform.MediaPlayer.MPMediaQuery
 
-actual class MusicPlayer(private val platform: Platform) { // Add platform to constructor
+actual class MusicPlayer actual constructor(private val platform: Platform<out Any?>) {
     private var player: AVPlayer? = null
 
     actual fun play(song: Song) {
-        // In a real app, you'd get the song's URL from MPMediaLibrary
-        // and use it to create the AVPlayerItem.
-        // For now, we'll just log that we're "playing".
-        println("Playing ${song.title}")
+        player?.pause()
+        player = null
+
+        // Use MPMediaLibrary to get the actual asset URL from persistent ID
+        val query = MPMediaQuery.songsQuery()
+        query.addFilterPredicate(MPMediaPropertyPersistentID.predicateForProperty(MPMediaPropertyPersistentID, song.uri.toLong()))
+        val mediaItem = query.items?.firstOrNull()
+
+        if (mediaItem != null && mediaItem.assetURL != null) {
+            player = AVPlayer(playerItem = AVPlayerItem(uRL = mediaItem.assetURL!!))
+            player?.play()
+            println("Playing ${song.title} from iOS Media Library")
+        } else {
+            println("Error: Could not find media item or asset URL for ${song.title}")
+        }
     }
 
     actual fun pause() {
@@ -23,5 +37,9 @@ actual class MusicPlayer(private val platform: Platform) { // Add platform to co
         player?.pause()
         player = null
         println("Stopping")
+    }
+
+    actual fun isPlaying(): Boolean {
+        return player?.rate ?: 0.0f > 0.0f
     }
 }

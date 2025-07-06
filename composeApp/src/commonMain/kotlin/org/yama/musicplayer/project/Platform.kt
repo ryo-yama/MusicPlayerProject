@@ -1,8 +1,9 @@
 package org.yama.musicplayer.project
 
-interface Platform {
+interface Platform<out T> {
     val name: String
-    val applicationContext: Any? // Add this line
+    val applicationContext: T
+    fun getAppVersion(): String
 }
 
-expect fun getPlatform(): Platform
+expect fun getPlatform(): Platform<Any?>

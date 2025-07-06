@@ -33,6 +33,7 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation("androidx.appcompat:appcompat:1.6.1") // Add this line
         }
         commonMain.dependencies {
             implementation(compose.runtime)
