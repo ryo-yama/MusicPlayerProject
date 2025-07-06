@@ -1,0 +1,7 @@
+TEAM_ID=
+
+PRODUCT_NAME=MusicPlayerProject
+PRODUCT_BUNDLE_IDENTIFIER=org.yama.musicplayer.project.MusicPlayerProject$(TEAM_ID)
+
+CURRENT_PROJECT_VERSION=1
+MARKETING_VERSION=1.0
